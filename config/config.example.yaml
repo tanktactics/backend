@@ -2,3 +2,6 @@ api:
   host: 'localhost'
   port: 8000
   prefix: '/api'
+
+db:
+  url: 'postgresql://johndoe:randompassword@localhost:5432/tanktactics?schema=public'
