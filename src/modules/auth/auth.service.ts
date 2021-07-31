@@ -3,19 +3,20 @@ import { PrismaService } from '@/modules/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignUpDto } from './dto/signup-auth.dto';
 import { SignInDto } from './dto/signin-auth.dto';
+import { hash, verify } from 'argon2';
 
 @Injectable()
 export class AuthService {
   constructor(private prisma: PrismaService, private jwtService: JwtService) {}
 
-  // TODO: add argon2 hashing, but it wouldn't work on my windows machine :)
   async signUp(body: SignUpDto) {
     const { email, password, username } = body;
 
+    const hashedPassword = await hash(password);
     const user = await this.prisma.user.create({
       data: {
         email,
-        password,
+        password: hashedPassword,
         username,
       },
     });
@@ -40,7 +41,7 @@ export class AuthService {
       throw new HttpException("user doesn't exist", HttpStatus.NOT_FOUND);
     }
 
-    if (password === user.password) {
+    if (await verify(user.password, password)) {
       return {
         token: this.jwtService.sign({
           sub: user.id,
