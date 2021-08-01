@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from '@/filters/http-exception.filter';
 import { Logger } from '@/utils/logger';
+import { PrismaFilter } from '@/filters/prisma.filter';
 
 async function bootstrap() {
   const logger = new Logger('server');
@@ -17,7 +18,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix(config.get<string>('api.prefix'));
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new HttpExceptionFilter(), new PrismaFilter());
 
   await app.listen(config.get<number>('api.port'));
 }
