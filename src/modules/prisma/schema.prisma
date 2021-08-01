@@ -32,7 +32,7 @@ model Game {
 
 model Player {
   id       String @id @default(uuid())
-  username String @unique
+  username String
   points   Int
   range    Int
   health   Int    @default(3)
