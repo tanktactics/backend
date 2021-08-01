@@ -12,10 +12,6 @@ model User {
   username String
   email    String @unique
   password String
-
-  // TODO: make this a many-to-many relation, a user can have multitiple games and a game can have multitiple players
-  game   Game?   @relation(fields: [gameId], references: [id])
-  gameId String?
 }
 
 enum State {
@@ -31,7 +27,7 @@ model Game {
   boardHeight Int
 
   state   State
-  players User[]
+  players Player[]
 }
 
 model Player {
@@ -44,4 +40,7 @@ model Player {
   
   x Int
   y Int
+
+  game   Game?   @relation(fields: [gameId], references: [id])
+  gameId String?
 }
