@@ -14,13 +14,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger,
   });
-  
+
   const config = app.get<ConfigService>(ConfigService);
 
+  app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix(config.get<string>('api.prefix'));
   app.useGlobalFilters(new HttpExceptionFilter(), new PrismaFilter());
-  app.useGlobalInterceptors(new ResponseInterceptor())
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   await app.listen(config.get<number>('api.port'));
 }
