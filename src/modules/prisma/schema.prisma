@@ -12,4 +12,36 @@ model User {
   username String
   email    String @unique
   password String
+
+  // TODO: make this a many-to-many relation, a user can have multitiple games and a game can have multitiple players
+  game   Game?   @relation(fields: [gameId], references: [id])
+  gameId String?
+}
+
+enum State {
+  ongoing
+  ended
+}
+
+model Game {
+  id   String @id @default(uuid())
+  name String
+
+  boardWidth  Int
+  boardHeight Int
+
+  state   State
+  players User[]
+}
+
+model Player {
+  id       String @id @default(uuid())
+  username String @unique
+  points   Int
+  range    Int
+  health   Int    @default(3)
+  kills    Int
+  
+  x Int
+  y Int
 }
