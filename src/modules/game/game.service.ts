@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/modules/prisma/prisma.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UserService } from '@/modules/user/user.service';
-import { Player, User } from '@prisma/client';
+import { Game, Player, User } from '@prisma/client';
 
 @Injectable()
 export class GameService {
@@ -11,6 +11,11 @@ export class GameService {
     private userService: UserService,
   ) {}
 
+  /**
+   * @param  {CreateGameDto} body
+   * @returns {Game}
+   * @description creates a game
+   */
   async create(body: CreateGameDto) {
     const { name, boardWidth, boardHeight, players } = body;
 
@@ -21,6 +26,9 @@ export class GameService {
         boardWidth: boardWidth ?? players.length * 5,
         boardHeight: boardHeight ?? players.length * 3,
         state: 'ongoing',
+      },
+      include: {
+        players: true,
       },
     });
 
@@ -42,12 +50,6 @@ export class GameService {
       });
     });
 
-    const result = await this.prisma.game.findMany({
-      include: {
-        players: true,
-      },
-    });
-
-    return result;
+    return game;
   }
 }
