@@ -3,7 +3,7 @@ import config from 'config';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from '@/modules/prisma/prisma.module';
 import { AuthModule } from '@/modules/auth/auth.module';
-import { EventModule } from '@/modules/event/event.module';
+import { GameModule } from '@/modules/game/game.module';
 
 @Module({
   imports: [
@@ -13,7 +13,7 @@ import { EventModule } from '@/modules/event/event.module';
     }),
     PrismaModule,
     AuthModule,
-    EventModule
+    GameModule,
   ],
 })
 export class AppModule {}
