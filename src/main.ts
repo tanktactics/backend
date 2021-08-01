@@ -5,6 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from '@/filters/http-exception.filter';
 import { Logger } from '@/utils/logger';
 import { PrismaFilter } from '@/filters/prisma.filter';
+import { ResponseInterceptor } from '@/interceptors/response.interceptor';
 
 async function bootstrap() {
   const logger = new Logger('server');
@@ -19,6 +20,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix(config.get<string>('api.prefix'));
   app.useGlobalFilters(new HttpExceptionFilter(), new PrismaFilter());
+  app.useGlobalInterceptors(new ResponseInterceptor())
 
   await app.listen(config.get<number>('api.port'));
 }
