@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/modules/prisma/prisma.service';
 import { User } from '@prisma/client';
 
@@ -25,6 +25,24 @@ export class UserService {
         username,
       },
     });
+
+    return user;
+  }
+
+  /**
+   * @param  {string} email
+   * @returns {User}
+   */
+  async getByEmail(email: string): Promise<User> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      throw new HttpException("user doesn't exist", HttpStatus.NOT_FOUND);
+    }
 
     return user;
   }

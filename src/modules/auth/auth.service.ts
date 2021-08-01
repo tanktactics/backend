@@ -10,10 +10,12 @@ import { UserService } from '@/modules/user/user.service';
 export class AuthService {
   constructor(
     private userService: UserService,
-    private prisma: PrismaService,
     private jwtService: JwtService,
   ) {}
 
+  /**
+   * @param  {SignUpDto} body
+   */
   async signUp(body: SignUpDto) {
     const { email, password, username } = body;
 
@@ -30,18 +32,13 @@ export class AuthService {
     };
   }
 
+  /**
+   * @param  {SignInDto} body
+   */
   async signIn(body: SignInDto) {
     const { email, password } = body;
 
-    const user = await this.prisma.user.findUnique({
-      where: {
-        email,
-      },
-    });
-
-    if (!user) {
-      throw new HttpException("user doesn't exist", HttpStatus.NOT_FOUND);
-    }
+    const user = await this.userService.getByEmail(email);
 
     if (await verify(user.password, password)) {
       return {
@@ -51,6 +48,6 @@ export class AuthService {
       };
     }
 
-    throw new HttpException("password doesn't match", HttpStatus.FORBIDDEN);
+    throw new HttpException("passwords doesn't match", HttpStatus.FORBIDDEN);
   }
 }
