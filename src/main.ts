@@ -3,9 +3,16 @@ import { AppModule } from '@/modules/app/app.module';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from '@/filters/http-exception.filter';
+import { Logger } from '@/utils/logger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const logger = new Logger('server');
+  logger.log('starting server');
+
+  const app = await NestFactory.create(AppModule, {
+    logger,
+  });
+  
   const config = app.get<ConfigService>(ConfigService);
 
   app.useGlobalPipes(new ValidationPipe());
