@@ -22,6 +22,7 @@ async function bootstrap() {
   app.setGlobalPrefix(config.get<string>('api.prefix'));
   app.useGlobalFilters(new HttpExceptionFilter(), new PrismaFilter());
   app.useGlobalInterceptors(new ResponseInterceptor());
+  app.enableVersioning();
 
   await app.listen(config.get<number>('api.port'));
 }

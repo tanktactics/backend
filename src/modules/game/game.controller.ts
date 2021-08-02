@@ -1,5 +1,5 @@
 import { JwtAuthGuard } from '@/guards/jwt-auth.guard';
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Version } from '@nestjs/common';
 import { CreateGameDto } from './dto/create-game.dto';
 import { GameService } from './game.service';
 
@@ -7,7 +7,7 @@ import { GameService } from './game.service';
 export class GameController {
   constructor(private gameService: GameService) {}
 
-  // TODO: add authentication guard
+  @Version('1')
   @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() body: CreateGameDto) {
