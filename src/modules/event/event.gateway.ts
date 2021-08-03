@@ -1,21 +1,20 @@
 import { Logger } from '@nestjs/common';
 import {
   WebSocketGateway,
-  WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
+  WsResponse,
 } from '@nestjs/websockets';
-import { Server } from 'socket.io';
 
 @WebSocketGateway({ transports: ['websocket'] })
-export class EventGateway extends Logger implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+export class EventGateway
+  extends Logger
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
   constructor() {
-    super();
+    super('events');
   }
-
-  @WebSocketServer()
-  private wss: Server;
 
   public afterInit() {
     super.log('wss initialized');
@@ -23,14 +22,13 @@ export class EventGateway extends Logger implements OnGatewayInit, OnGatewayConn
 
   public handleConnection() {
     super.log('ws client connected');
-
   }
 
   public handleDisconnect() {
     super.log('ws client disconnected');
   }
 
-  sendEvent(event: string, data: any) {
-    return { event, data }
+  sendEvent(event: string, data: any): WsResponse<any> {
+    return { event, data };
   }
 }

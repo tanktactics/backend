@@ -6,6 +6,7 @@ import { HttpExceptionFilter } from '@/filters/http-exception.filter';
 import { Logger } from '@/utils/logger';
 import { PrismaFilter } from '@/filters/prisma.filter';
 import { ResponseInterceptor } from '@/interceptors/response.interceptor';
+import { WsAdapter } from '@nestjs/platform-ws';
 
 async function bootstrap() {
   const logger = new Logger('server');
@@ -23,6 +24,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter(), new PrismaFilter());
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.enableVersioning();
+  app.useWebSocketAdapter(new WsAdapter(app));
 
   await app.listen(config.get<number>('api.port'));
 }
