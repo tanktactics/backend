@@ -12,4 +12,10 @@ export class UserController {
   search(@Query('query') query: string) {
     return this.userService.search(query);
   }
+
+  @Version('1')
+  @Post('check')
+  checkUsernameAvailability(@Query('query') username: string) {
+    return this.userService.checkUsernameAvailability(username);
+  }
 }

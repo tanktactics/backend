@@ -57,6 +57,9 @@ export class UserService {
     return user;
   }
 
+  /**
+   * @param  {string} query
+   */
   async search(query: string) {
     const result = await this.prisma.user.findMany({
       where: {
@@ -77,5 +80,26 @@ export class UserService {
     });
 
     return result;
+  }
+
+  async checkUsernameAvailability(username: string) {
+    const result = await this.prisma.user.findFirst({
+      where: {
+        username: {
+          equals: username,
+          mode: 'insensitive',
+        },
+      },
+    });
+
+    if (!result) {
+      return {
+        available: true,
+      };
+    }
+
+    return {
+      available: false,
+    };
   }
 }
